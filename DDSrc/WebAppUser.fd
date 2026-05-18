@@ -1,7 +1,7 @@
-#REPLACE FILE264 WebAppUser
-#REPLACE WebAppUser.File_Number |CI264
-#REPLACE WebAppUser.LoginName |FS264,1
-#REPLACE WebAppUser.Password |FS264,2
-#REPLACE WebAppUser.Rights |FN264,3
-#REPLACE WebAppUser.FullName |FS264,4
-#REPLACE WebAppUser.LastLogin |FD264,5
+#REPLACE FILE264 webappuser
+#REPLACE webappuser.File_Number |CI264
+#REPLACE webappuser.LoginName |FS264,1
+#REPLACE webappuser.Password |FS264,2
+#REPLACE webappuser.Rights |FN264,3
+#REPLACE webappuser.FullName |FS264,4
+#REPLACE webappuser.LastLogin |FD264,5

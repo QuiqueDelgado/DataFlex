@@ -112,17 +112,6 @@
 			</DDClasses>
 		</Table>
 		<Table>
-			<tableNumber>264</tableNumber>
-			<tableName>WebAppUser</tableName>
-			<DDClasses>
-				<DDClass>
-					<className>cWebAppUserDataDictionary</className>
-					<classFile>cWebAppUserDataDictionary.dd</classFile>
-					<preferred>true</preferred>
-				</DDClass>
-			</DDClasses>
-		</Table>
-		<Table>
 			<tableNumber>265</tableNumber>
 			<tableName>WebAppServerProps</tableName>
 			<DDClasses>
