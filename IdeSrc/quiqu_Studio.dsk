@@ -3,39 +3,5 @@ CurrentProject=WebApp.src
 Location=C:\DataFlex Projects\FutbolWebApp\IdeSrc\quiqu_Studio.dsk
 CreateNew=3
 [TabWindows]
-GroupCount=1
+GroupCount=0
 HorizontalGroups=1
-[TabGroup0]
-GroupSize=40
-SelectedTab=2
-[Window0]
-Filename=Workspace Dashboard
-ViewType=101
-Top=21
-Left=0
-Bottom=1078
-Right=2026
-TabIndex=0
-TabGroup=0
-[Window1]
-Filename=C:\DataFlex Projects\FutbolWebApp\AppSrc\Dashboard.wo
-ViewType=1
-Top=21
-Left=0
-Bottom=1078
-Right=2026
-CursorLine=18
-CursorColumn=76
-TabIndex=1
-TabGroup=0
-[Window2]
-Filename=C:\DataFlex Projects\FutbolWebApp\AppSrc\WebApp.src
-ViewType=1
-Top=21
-Left=0
-Bottom=1078
-Right=2026
-CursorLine=0
-CursorColumn=0
-TabIndex=2
-TabGroup=0

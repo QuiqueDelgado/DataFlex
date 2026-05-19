@@ -35,7 +35,7 @@ Object oZoomEntrenador is a cWebView
     Set Main_DD To oentrenador_DD
     Set Server  To oentrenador_DD
 
-
+// aqui empezamos 
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
         WebSetResponsive piColumnCount rmMobile to 4
@@ -71,15 +71,16 @@ Object oZoomEntrenador is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "EquipoID"
             Set pbPromptButton to True
-
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
-
+            
+            WebRegisterPath ntNavigateForward oSelectEquipo
+                
             Procedure OnPrompt
                 Send NavigatePath
             End_Procedure
         End_Object 
     End_Object 
+
+// Botones
 
     Object oActionGroup is a cWebMenuGroup
 
@@ -88,6 +89,7 @@ Object oZoomEntrenador is a cWebView
             Set psCaption to "Save"
 
             Procedure OnClick
+                Send ShowInfoBox "Objecto que genera la vuelta, button save" "Estoy en Madrid todavía pero me vuelvo a Málaga"
                 Send Request_Save
             End_Procedure
 
@@ -136,7 +138,7 @@ Object oZoomEntrenador is a cWebView
 
         // let's hide all buttons and then Show the ones we want
         WebSet pbRender of oEditBtn to False
-        WebSet pbRender of oSaveBtn to False
+        WebSet pbRender of oSaveBtn to True
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
 
@@ -151,7 +153,6 @@ Object oZoomEntrenador is a cWebView
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
         Send NavigateClose Self
     End_Procedure
 
@@ -160,26 +161,22 @@ Object oZoomEntrenador is a cWebView
         Send NavigateClose Self
     End_Procedure
 
+   Procedure OnBeforeShow
+        Send ShowInfoBox "He llegado a Madrid" "OnBeforeShow - ZoomEntrenador se muestra"
+    End_Procedure
+
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a propbably a main file Select to Zoom.
+                Send ShowInfoBox "Vista invocada" "He llegado a Madrid desde Málaga"
                 Case Break
-
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
                 Case Break
-
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
                 Case Break
-
-            Case Else // must be nfUndefined
-
+            Case Else
         Case End
-
         Send SetActionButtons
-
     End_Procedure
 
 End_Object 

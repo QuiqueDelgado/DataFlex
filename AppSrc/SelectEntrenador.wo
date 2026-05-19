@@ -48,29 +48,7 @@ Object oSelectEntrenador is a cWebView
             Entry_Item entrenador.Nombre
             Set psCaption to "entrenador.Nombre"
             Set piWidth to 600
-        End_Object 
-
-        Object oDetailButton is a cWebColumnButton
-            Set psCaption to "btn"
-            Set piWidth to 45
-            Set pbFixedWidth to True
-            Set pbResizable to False
-            Set piListRowSpan to 4
-            Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
-            Set peAlign to alignleft
-
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
-
-            Procedure OnClick
-                Send NavigatePath
-            End_Procedure
-
-            Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
-                Move True to NavigateData.bReadOnly
-            End_Procedure
-
-        End_Object 
+        End_Object  
 
         Object oentrenadorApellido is a cWebColumn
             Entry_Item entrenador.Apellido
@@ -91,20 +69,41 @@ Object oSelectEntrenador is a cWebView
             Set psCaption to "entrenador.EquipoID"
             Set piWidth to 100
             Set pbNewLine to False
-        End_Object        
+        End_Object  
+        
+        Object oDetailButton is a cWebColumnButton
+            Set psCaption to "btn"
+            Set piWidth to 45
+            Set pbFixedWidth to True
+            Set pbResizable to False
+            Set piListRowSpan to 4
+            Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
+            Set peAlign to alignleft
 
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-//        WebRegisterPath ntNavigateForward oSelectView
+           WebRegisterPath ntNavigateForward oZoomEntrenador
+
+            Procedure OnClick
+                Send NavigatePath
+            End_Procedure
+
+            Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+                Move True to NavigateData.bReadOnly
+                Send ShowInfoBox "DetailButton" "objeto q provoca la navegación"
+            End_Procedure
+
+        End_Object
+
+        WebRegisterPath ntNavigateForward oZoomEntrenador
 
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
             Get GetNavigateData to NavigateData
 
             Case Begin
+                
                 Case (NavigateData.eNavigateType = nfFromParent)
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
+
+                    Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromChild)
@@ -112,13 +111,12 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromMain)
-                    Send NavigateClose Self
+                    Send NavigateForward of oZoomEntrenador Self
                     Case Break
 
-                Case Else // must be nfUndefined
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
+                Case Else
+                    Send NavigateForward of oZoomEntrenador Self
+                    Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
 
             Case End
         End_Procedure
@@ -144,10 +142,9 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
         Object oNewButton is a cWebMenuItem
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
-
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oZoomView
-
+            
+            WebRegisterPath ntNavigateForward oZoomEntrenador
+            
             Procedure OnClick
                 Send NavigatePath
             End_Procedure
@@ -159,30 +156,25 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
         End_Object 
     End_Object 
 
-    Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
-        WebSet pbRender of oNewButton to True
-        WebSet pbRender of oDetailButton to True
-
-        Case Begin
-            Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down
-                Case Break
-
-            Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
-                Case Break
-
-            Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a probably a main-file lookup from a Zoom
-                WebSet pbRender of oDetailButton to False
-                Case Break
-
-            Case Else // must be nfUndefined
-                // This may be the start of a drilldown query or this may be used for some kind of custom query.
-
-        Case End
-
+    Procedure OnBeforeShow
+        Send ShowInfoBox "Ya estoy en Málaga" "OnBeforeShow - SelectEntrenador se muestra, navegación hacia adelante o vuelta"
     End_Procedure
 
-
+    Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
+        
+        WebSet pbRender of oNewButton to True
+        WebSet pbRender of oDetailButton to True
+        
+        Case Begin
+            Case (NavigateData.eNavigateType = nfFromParent)
+                Case Break
+            Case (NavigateData.eNavigateType = nfFromChild)
+                Case Break
+            Case (NavigateData.eNavigateType = nfFromMain)
+            
+            WebSet pbRender of oDetailButton to False
+                Case Break
+            Case Else
+        Case End
+    End_Procedure
 End_Object 
