@@ -73,7 +73,7 @@ Object oDashboard is a cWebView
                 Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Entrenador</div><div class="Tile_Subtitle"></div></div>'
                                 
                 
-                WebRegisterPath ntNavigateForward oZoomEntrenador
+                WebRegisterPath ntNavigateForward oSelectEntrenador
                 
                 Procedure OnClick String sId String sParam
                     Send NavigatePath
@@ -87,7 +87,7 @@ Object oDashboard is a cWebView
                 Set psCSSClass to "Tile Dark"
                 Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Equipo</div><div class="Tile_Subtitle"></div></div>'
                
-                WebRegisterPath ntNavigateForward oZoomEquipo
+                WebRegisterPath ntNavigateForward oSelectEquipo
                 
                 Procedure OnClick String sId String sParam
                     Send NavigatePath
@@ -103,7 +103,7 @@ Object oDashboard is a cWebView
                 Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Jugador</div><div class="Tile_Subtitle"></div></div>'
             
                
-                WebRegisterPath ntNavigateForward oZoomJugador
+                WebRegisterPath ntNavigateForward oSelectJugador
                 
                 Procedure OnClick String sId String sParam
                     Send NavigatePath
@@ -118,7 +118,7 @@ Object oDashboard is a cWebView
                 Set psCSSClass to "Tile DarkAlternate"
                 Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Liga</div><div class="Tile_Subtitle"></div></div>'
                 
-                WebRegisterPath ntNavigateForward oZoomLiga
+                WebRegisterPath ntNavigateForward oSelectLiga
                 
                 Procedure OnClick String sId String sParam
                     Send NavigatePath
@@ -132,7 +132,7 @@ Object oDashboard is a cWebView
                 Set psCSSClass to "Tile DarkAlternate"
                 Set psHtml to '<div class="WebCon_Sizer" data-ServerOnClick="openview"><div Class="Tile_Title">Posicion</div><div class="Tile_Subtitle"></div></div>'
                 
-                WebRegisterPath ntNavigateForward oZoomPosicion
+                WebRegisterPath ntNavigateForward oSelectPosicion
                 
                 Procedure OnClick String sId String sParam
                     Send NavigatePath

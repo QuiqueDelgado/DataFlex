@@ -3,5 +3,19 @@ CurrentProject=WebApp.src
 Location=C:\DataFlex Projects\FutbolWebApp\IdeSrc\quiqu_Studio.dsk
 CreateNew=3
 [TabWindows]
-GroupCount=0
+GroupCount=1
 HorizontalGroups=1
+[TabGroup0]
+GroupSize=40
+SelectedTab=0
+[Window0]
+Filename=C:\DataFlex Projects\FutbolWebApp\AppSrc\SelectEntrenador.wo
+ViewType=1
+Top=21
+Left=0
+Bottom=1078
+Right=2026
+CursorLine=178
+CursorColumn=17
+TabIndex=0
+TabGroup=0
