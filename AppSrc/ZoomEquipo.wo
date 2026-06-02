@@ -6,6 +6,7 @@ Use cWebView.pkg
 Use cWebPanel.pkg
 Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
+Use cWebGroup.pkg
 Use cWebForm.pkg
 
 Use cligaDataDictionary.dd
@@ -13,7 +14,7 @@ Use cequipoDataDictionary.dd
 
 Object oZoomEquipo is a cWebView
     Set piColumnCount to 12
-    Set psCaption to "ZoomEquipo"
+    Set psCaption to "Equipo"
     Set peWebViewStyle to wvsDrilldown
     Set peViewType to vtZoom
     Set pbShowCaption to False
@@ -24,39 +25,77 @@ Object oZoomEquipo is a cWebView
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
     End_Object 
 
-    Set Main_DD To oequipo_DD
-    Set Server  To oequipo_DD
+    Set Main_DD to oequipo_DD
+    Set Server  to oequipo_DD
 
 
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
         WebSetResponsive piColumnCount rmMobile to 4
 
-        Object oequipoNombre is a cWebForm
-            Entry_Item equipo.Nombre
-            Set piColumnSpan to 12
+        Object oWebGroup1 is a cWebGroup
+            Set piColumnSpan to 0
             Set piColumnIndex to 0
-            Set peLabelPosition to lpTop
-            Set psLabel to "Nombre"
+            Set piColumnCount to 12
+            Set psCaption to "Liga"
+            WebSetResponsive piColumnCount rmMobile to 4
+
+            Object oligaNombre is a cWebForm
+                Entry_Item liga.Nombre
+                Set piColumnSpan to 12
+                Set piColumnIndex to 0
+                Set peLabelPosition to lpTop
+                Set psLabel to "Nombre"
+                Set pbPromptButton to True
+
+                WebRegisterPath ntNavigateForward oSelectLiga
+
+                Procedure OnPrompt
+                    Send NavigatePath
+                End_Procedure
+            End_Object 
+
+            Object oligaPais is a cWebForm
+                Entry_Item liga.Pais
+                Set piColumnSpan to 9
+                Set piColumnIndex to 0
+                Set peLabelPosition to lpTop
+                Set psLabel to "Pais"
+                Set pbPromptButton to True
+
+                WebRegisterPath ntNavigateForward oSelectLiga
+
+                Procedure OnPrompt
+                    Send NavigatePath
+                End_Procedure
+            End_Object 
+
+            Object oligaEquipos is a cWebForm
+                Entry_Item liga.Equipos
+                Set piColumnSpan to 2
+                Set piColumnIndex to 0
+                Set peLabelPosition to lpTop
+                Set psLabel to "Equipos"
+            End_Object 
         End_Object 
 
-        Object oligaID is a cWebForm
-            Entry_Item liga.ID
-            Set piColumnSpan to 2
+        Object oWebGroup2 is a cWebGroup
+            Set piColumnSpan to 0
             Set piColumnIndex to 0
-            Set peLabelPosition to lpTop
-            Set psLabel to "LigaID"
-            Set pbPromptButton to True
+            Set piColumnCount to 12
+            Set psCaption to "Equipo"
+            WebSetResponsive piColumnCount rmMobile to 4
 
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-            WebRegisterPath ntNavigateForward oSelectLiga
-
-            Procedure OnPrompt
-                Send NavigatePath
-            End_Procedure
+            Object oequipoNombre is a cWebForm
+                Entry_Item equipo.Nombre
+                Set piColumnSpan to 12
+                Set piColumnIndex to 0
+                Set peLabelPosition to lpTop
+                Set psLabel to "Nombre"
+            End_Object 
         End_Object 
     End_Object 
 
@@ -64,17 +103,21 @@ Object oZoomEquipo is a cWebView
 
         Object oSaveBtn is a cWebMenuItem
             Set psCSSClass to "WebSaveMenuItem"
-            Set psCaption to "Save"
+            Set psCaption to "Guardar"
 
             Procedure OnClick
                 Send Request_Save
+            End_Procedure
+
+            Procedure OnGetNavigateBackData tWebNavigateData  ByRef NavigateData Handle hoBackToView
+                Forward Send OnGetNavigateBackData (&NavigateData) hoBackToView
             End_Procedure
 
         End_Object 
 
         Object oEditBtn is a cWebMenuItem
             Set psCSSClass to "WebEditMenuItem"
-            Set psCaption to "Edit"
+            Set psCaption to "Editar"
             Procedure OnClick
                 Send ChangeEditMode True
                 Send SetActionButtons
@@ -84,7 +127,7 @@ Object oZoomEquipo is a cWebView
 
         Object oDeleteBtn is a cWebMenuItem
             Set psCSSClass to "WebDeleteMenuItem"
-            Set psCaption to "Delete"
+            Set psCaption to "Borrar"
             Set peActionDisplay to adMenu
 
             Procedure OnClick
@@ -95,7 +138,7 @@ Object oZoomEquipo is a cWebView
 
         Object oCancelChangesBtn is a cWebMenuItem
             Set psCSSClass to "WebIcon_Refresh"
-            Set psCaption to "Clear Changes"
+            Set psCaption to "Limpiar Cambios"
             Set peActionDisplay to adMenu
             Procedure OnClick
                 Send RefreshRecord
@@ -161,4 +204,4 @@ Object oZoomEquipo is a cWebView
 
     End_Procedure
 
-End_Object 
+End_Object  

@@ -7,42 +7,62 @@ Use cWebPanel.pkg
 Use cWebMenuGroup.pkg
 Use cWebMenuItem.pkg
 Use cWebForm.pkg
+Use cWebButton.pkg
+Use cWebHtmlBox.pkg
+Use cWebTabContainer.pkg
+Use cWebTabPage.pkg
+Use cWebList.pkg
+Use cWebColumn.pkg
+Use cWebColumnButton.pkg
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 Use cjugadorDataDictionary.dd
+Use cposicionDataDictionary.dd
+Use cjugadorposicionDataDictionary.dd
+Use SelectJugadorPosicion.wo
+
 
 Object oZoomJugador is a cWebView
     Set piColumnCount to 12
-    Set psCaption to "ZoomJugador"
+    Set psCaption to "Jugador"
     Set peWebViewStyle to wvsDrilldown
     Set peViewType to vtZoom
     Set pbShowCaption to False
     Set Verify_Save_Msg to 0
     Set piMaxWidth to 1024
+    Property Boolean pbPosicionesEdit False
 
     Object oliga_DD is a cligaDataDictionary
     End_Object 
 
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
+        Set DDO_Server to oliga_DD
     End_Object 
 
     Object ojugador_DD is a cjugadorDataDictionary
-        Set DDO_Server To oequipo_DD
+        Set DDO_Server to oequipo_DD
     End_Object 
 
-    Set Main_DD To ojugador_DD
-    Set Server  To ojugador_DD
+    Object oposicion_DD is a cposicionDataDictionary
+    End_Object
+
+    Object ojugadorposicion_DD is a cjugadorposicionDataDictionary
+        Set DDO_Server to ojugador_DD
+        Set DDO_Server to oposicion_DD
+        Set Constrain_File to jugador.File_Number
+    End_Object
+
+    Set Main_DD to ojugador_DD
+    Set Server  to ojugador_DD
 
 
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
-        WebSetResponsive piColumnCount rmMobile to 4
 
         Object ojugadorNombre is a cWebForm
             Entry_Item jugador.Nombre
-            Set piColumnSpan to 10
+            Set piColumnSpan to 4
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "Nombre"
@@ -50,39 +70,192 @@ Object oZoomJugador is a cWebView
 
         Object ojugadorApellido is a cWebForm
             Entry_Item jugador.Apellido
-            Set piColumnSpan to 10
-            Set piColumnIndex to 0
+            Set piColumnSpan to 4
+            Set piColumnIndex to 7
             Set peLabelPosition to lpTop
             Set psLabel to "Apellido"
         End_Object 
+        WebSetResponsive piColumnCount rmMobile to 4
 
         Object ojugadorNacionalidad is a cWebForm
             Entry_Item jugador.Nacionalidad
-            Set piColumnSpan to 8
+            Set piColumnSpan to 4
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "Nacionalidad"
         End_Object 
 
-        Object oequipoID is a cWebForm
-            Entry_Item equipo.ID
-            Set piColumnSpan to 2
-            Set piColumnIndex to 0
-            Set peLabelPosition to lpTop
-            Set psLabel to "EquipoID"
-            Set pbPromptButton to True
+        Object oWebTabContainer is a cWebTabContainer
+            Set pbFillHeight to True
+            Set piColumnSpan to 12
+            Set pbShowLabel to False
+
+            Object oPage1 is a cWebTabPage
+                Set piColumnCount to 12
+                Set psCaption to "Equipo y Liga"
+
+                Object oequipoNombre is a cWebForm
+                    Entry_Item equipo.Nombre
+                    Set piColumnSpan to 5
+                    Set piColumnIndex to 0
+                    Set peLabelPosition to lpTop
+                    Set psLabel to "Equipo"
+                    Set pbPromptButton to True
 
 // ToDo: Fill in the from-child parent Select view object name for navigate forward
-            WebRegisterPath ntNavigateForward oSelectEquipo
-            WebRegisterPath ntNavigateForward oSelectPosicion
+                    WebRegisterPath ntNavigateForward oSelectEquipo
 
-            Procedure OnPrompt
-                Send NavigatePath
-            End_Procedure
+                    Procedure OnPrompt
+                        Send NavigatePath
+                    End_Procedure
+                End_Object 
+
+                Object oDespedirButton is a cWebButton
+                    Set piColumnSpan to 2
+                    Set piColumnIndex to 7
+                    Set psCaption to "Despedir"
+        
+                    Procedure OnClick
+                        Send DespedirJugador
+                    End_Procedure
+                End_Object
+
+                Object oligaNombre is a cWebForm
+                    Entry_Item liga.Nombre
+                    Set piColumnSpan to 5
+                    Set piColumnIndex to 0
+                    Set peLabelPosition to lpTop
+                    Set psLabel to "Liga"
+                    Set pbPromptButton to True
+
+// ToDo: Fill in the from-child parent Select view object name for navigate forward
+                    WebRegisterPath ntNavigateForward oSelectLiga
+
+                    Procedure OnPrompt
+                        Send NavigatePath
+                    End_Procedure
+                End_Object 
+                WebSetResponsive piColumnCount rmMobile to 4
+
+                Object oligaPais is a cWebForm
+                    Entry_Item liga.Pais
+                    Set piColumnSpan to 4
+                    Set piColumnIndex to 7
+                    Set peLabelPosition to lpTop
+                    Set psLabel to "Pais"
+                End_Object 
+            End_Object 
+
+            Object oPage2 is a cWebTabPage
+                Set piColumnCount to 12
+                Set psCaption to "Posiciones"
+                WebSetResponsive piColumnCount rmMobile to 4
+
+                Object oEditarPosicionesButton is a cWebButton
+                    Set piColumnSpan to 4
+                    Set piColumnIndex to 0
+                    Set psCaption to "Editar posiciones"
+
+                    WebRegisterPath ntNavigateForward oSelectJugadorPosicion
+
+                    Procedure OnClick
+                        Send NavigatePath
+                    End_Procedure
+
+                    Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+                        Move False to NavigateData.bReadOnly
+                    End_Procedure
+                End_Object
+
+                Object oPosicionesDisponiblesList is a cWebList
+                    Set psCaption to "Posiciones disponibles"
+                    Set Server to oposicion_DD
+                    Set piColumnSpan to 12
+                    Set piColumnIndex to 0
+                    Set pbFillHeight to False
+                    Set pbScroll to False
+                    Set piMinHeight to 180
+                    Set pbServerOnShow to True
+                    Set pbShowHeader to True
+                    Set pbRender to False
+
+                    Procedure OnShow
+                        Forward Send OnShow
+                        Send GridRefresh
+                    End_Procedure
+
+                    Object oposicionDisponibleNombreCol is a cWebColumn
+                        Entry_Item posicion.Nombre
+                        Set psCaption to "Posiciones disponibles"
+                        Set piWidth to 500
+                    End_Object
+
+                    Object oAgregarPosicionButton is a cWebColumnButton
+                        Set psButtonCaption to "Agregar"
+                        Set piWidth to 110
+                        Set pbFixedWidth to True
+                        Set pbResizable to False
+                        Set peAlign to alignRight
+
+                        Procedure OnClick String sButton String sRowId
+                            Send AgregarPosicion sRowId
+                        End_Procedure
+                    End_Object
+                End_Object
+
+                Object oPosicionesList is a cWebList
+                    Set psCaption to "Posiciones del jugador"
+                    Set Server to ojugadorposicion_DD
+                    Set piColumnSpan to 12
+                    Set piColumnIndex to 0
+                    Set pbFillHeight to False
+                    Set pbScroll to False
+                    Set piMinHeight to 180
+                    Set pbServerOnShow to True
+                    Set pbShowHeader to True
+
+                    Procedure OnShow
+                        Forward Send OnShow
+                        Send GridRefresh
+                    End_Procedure
+
+                    Object oposicionNombreCol is a cWebColumn
+                        Entry_Item posicion.Nombre
+                        Set psCaption to "Posiciones del jugador"
+                        Set piWidth to 500
+                    End_Object
+
+                    Object oQuitarPosicionButton is a cWebColumnButton
+                        Set psButtonCaption to "Quitar"
+                        Set piWidth to 100
+                        Set pbFixedWidth to True
+                        Set pbResizable to False
+                        Set peAlign to alignRight
+                        Set pbRender to False
+
+                        Procedure OnClick String sButton String sRowId
+                            Send QuitarPosicion sRowId
+                        End_Procedure
+                    End_Object
+                End_Object
+            End_Object
         End_Object 
     End_Object 
 
     Object oActionGroup is a cWebMenuGroup
+        Set psGroupName to "MainActions"
+        
+            Object oBackBtn is a cWebMenuItem
+
+                Set psCaption to "Back"
+                Set peActionDisplay to adBoth
+                Set psImage to "Images/back-green.svg"
+            
+            Procedure OnClick
+                Send NavigateCancel Self
+            End_Procedure
+
+        End_Object
 
         Object oSaveBtn is a cWebMenuItem
             Set psCSSClass to "WebSaveMenuItem"
@@ -115,6 +288,17 @@ Object oZoomJugador is a cWebView
 
         End_Object 
 
+        // Object oFireBtn is a cWebMenuItem
+        //     Set psCSSClass to "WebDeleteMenuItem"
+        //     Set psCaption to "Despedir"
+        //     Set peActionDisplay to adMenu
+
+        //     Procedure OnClick
+        //         Send DespedirJugador
+        //     End_Procedure
+
+        // End_Object
+
         Object oCancelChangesBtn is a cWebMenuItem
             Set psCSSClass to "WebIcon_Refresh"
             Set psCaption to "Clear Changes"
@@ -129,17 +313,25 @@ Object oZoomJugador is a cWebView
     Procedure SetActionButtons
         tWebNavigateData NavigateData
         Boolean bHasRecord
+        Boolean bPosicionesEdit
         Handle hoDD
 
         Get Server to hoDD
         Get GetNavigateData to NavigateData
         Get HasRecord of hoDD to bHasRecord
+        Get pbPosicionesEdit to bPosicionesEdit
 
         // let's hide all buttons and then Show the ones we want
         WebSet pbRender of oEditBtn to False
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
         WebSet pbRender of oDeleteBtn to False
+        // WebSet pbRender of oFireBtn to False
+        WebSet pbRender of oDespedirButton to bHasRecord
+        WebSet pbRender of oEditarPosicionesButton to bHasRecord
+        WebSet pbRender of oPosicionesList to bHasRecord
+        WebSet pbRender of oPosicionesDisponiblesList to False
+        WebSet pbRender of oQuitarPosicionButton to False
 
         If (NavigateData.bReadOnly) Begin
             WebSet pbRender of oEditBtn to True
@@ -148,7 +340,81 @@ Object oZoomJugador is a cWebView
             WebSet pbRender of oSaveBtn to True
             WebSet pbRender of oCancelChangesBtn to True
             WebSet pbRender of oDeleteBtn to bHasRecord
+            // WebSet pbRender of oFireBtn to bHasRecord
         End
+    End_Procedure
+
+    Procedure DespedirJugador
+        Send ChangeEditMode True
+        Send Clear of oequipo_DD
+        Send SetActionButtons
+    End_Procedure
+
+    Procedure ToggleEditarPosiciones
+        Boolean bPosicionesEdit
+
+        Get pbPosicionesEdit to bPosicionesEdit
+        Set pbPosicionesEdit to (not(bPosicionesEdit))
+        Send SetActionButtons
+        Send GridRefresh of oPosicionesDisponiblesList
+        Send GridRefresh of oPosicionesList
+    End_Procedure
+
+    Procedure AgregarPosicion String sRowId
+        Integer iJugadorId iPosicionId
+        Boolean bFound
+        RowID riPosicion
+
+        Move jugador.ID to iJugadorId
+        Move (DeserializeRowID(sRowId)) to riPosicion
+        Send ReadByRowId of oposicion_DD posicion.File_Number riPosicion
+        Move posicion.ID to iPosicionId
+
+        If (iJugadorId = 0) Begin
+            Send UserError "Guarda el jugador antes de asignar posiciones." "Posiciones"
+            Procedure_Return
+        End
+
+        If (iPosicionId = 0) Begin
+            Send UserError "Selecciona una posicion antes de asignarla." "Posiciones"
+            Procedure_Return
+        End
+
+        Send Clear of ojugadorposicion_DD
+        Set Field_Changed_Value of ojugadorposicion_DD Field jugadorposicion.JugadorID to iJugadorId
+        Set Field_Changed_Value of ojugadorposicion_DD Field jugadorposicion.PosicionID to iPosicionId
+        Send Find of ojugadorposicion_DD EQ Index.2
+        Move (Found) to bFound
+
+        If (bFound) Begin
+            Send UserError "El jugador ya tiene asignada esa posicion." "Posiciones"
+            Send Clear of ojugadorposicion_DD
+            Send GridRefresh of oPosicionesList
+            Procedure_Return
+        End
+
+        Send Clear of ojugadorposicion_DD
+        Set Field_Changed_Value of ojugadorposicion_DD Field jugadorposicion.JugadorID to iJugadorId
+        Set Field_Changed_Value of ojugadorposicion_DD Field jugadorposicion.PosicionID to iPosicionId
+        Send Request_Save of ojugadorposicion_DD
+        Send Clear of ojugadorposicion_DD
+        Send GridRefresh of oPosicionesDisponiblesList
+        Send GridRefresh of oPosicionesList
+    End_Procedure
+
+    Procedure QuitarPosicion String sRowId
+        Boolean bRowChanged
+
+        Get ChangeCurrentRow of oPosicionesList "row" sRowId to bRowChanged
+        If (not(bRowChanged)) Begin
+            Send UserError "No se pudo seleccionar la posicion para quitarla." "Posiciones"
+            Procedure_Return
+        End
+
+        Send Request_Delete of ojugadorposicion_DD
+
+        Send GridRefresh of oPosicionesDisponiblesList
+        Send GridRefresh of oPosicionesList
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
@@ -179,8 +445,10 @@ Object oZoomJugador is a cWebView
 
         Case End
 
+        Set pbPosicionesEdit to False
         Send SetActionButtons
+        Send GridRefresh of oPosicionesList
 
     End_Procedure
 
-End_Object 
+End_Object  

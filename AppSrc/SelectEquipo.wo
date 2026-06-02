@@ -13,7 +13,7 @@ Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 
 Object oSelectEquipo is a cWebView
-    Set psCaption to "SelectEquipo"
+    Set psCaption to "Equipos"
     Set peWebViewStyle to wvsDrilldown
     Set peViewType to vtSelect
     Set piColumnCount to 12
@@ -39,16 +39,28 @@ Object oSelectEquipo is a cWebView
         Set pbShowHeader to False
         Set piSortColumn to 0
 
+        Object oligaNombre is a cWebColumn
+            Entry_Item liga.Nombre
+            Set psCaption to "liga.Nombre"
+            Set piWidth to 1000
+        End_Object 
+
+        Object oligaPais is a cWebColumn
+            Entry_Item liga.Pais
+            Set psCaption to "liga.Pais"
+            Set piWidth to 500
+        End_Object 
+
+        Object oligaEquipos is a cWebColumn
+            Entry_Item liga.Equipos
+            Set psCaption to "liga.Equipos"
+            Set piWidth to 100
+        End_Object 
+
         Object oequipoNombre is a cWebColumn
             Entry_Item equipo.Nombre
             Set psCaption to "equipo.Nombre"
             Set piWidth to 1201
-        End_Object 
-
-        Object oligaID is a cWebColumn
-            Entry_Item liga.ID
-            Set psCaption to "equipo.LigaID"
-            Set piWidth to 100
         End_Object 
 
         Object oDetailButton is a cWebColumnButton
@@ -60,7 +72,6 @@ Object oSelectEquipo is a cWebView
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
             WebRegisterPath ntNavigateForward oZoomEquipo
 
             Procedure OnClick
@@ -70,11 +81,14 @@ Object oSelectEquipo is a cWebView
             Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
                 Move True to NavigateData.bReadOnly
             End_Procedure
+            
+            Procedure OnNavigateBack Handle hoCallback tWebNavigateData NavigateData
+                Forward Send OnNavigateBack hoCallback NavigateData
+            End_Procedure
 
         End_Object 
 
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-//        WebRegisterPath ntNavigateForward oSelectView
+        WebRegisterPath ntNavigateForward oSelectEntrenador
 
         Procedure OnRowClick String sRowId
             tWebNavigateData NavigateData
@@ -82,9 +96,8 @@ Object oSelectEquipo is a cWebView
 
             Case Begin
                 Case (NavigateData.eNavigateType = nfFromParent)
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-                    Send NavigateForward of oSelectView Self
+
+                    Send NavigateForward of oZoomEquipo Self
                     Case Break
 
                 Case (NavigateData.eNavigateType = nfFromChild)
@@ -95,10 +108,9 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
                     Send NavigateClose Self
                     Case Break
 
-                Case Else // must be nfUndefined
-// ToDo: Fill in the from-parent child Select view object name for navigate forward
-Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not yet defined"
-//                    Send NavigateForward of oSelectView Self
+                Case Else
+
+                    Send NavigateForward of oZoomEquipo Self
 
             Case End
         End_Procedure
@@ -113,7 +125,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
 
         Object oSearch is a cWebMenuItem
             Set psCSSClass to "WebPromptMenuItem"
-            Set psCaption to "Search"
+            Set psCaption to "Buscar"
 
             Procedure OnClick
                 Send Search of oList
@@ -123,9 +135,8 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
 
         Object oNewButton is a cWebMenuItem
             Set psCSSClass to "WebClearMenuItem"
-            Set psCaption to "New"
+            Set psCaption to "Nuevo"
 
-// ToDo: Fill in the from-main Zoom view object name for navigate forward
             WebRegisterPath ntNavigateForward oZoomEquipo
 
             Procedure OnClick
@@ -140,6 +151,7 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
     End_Object 
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
+            
         WebSet pbRender of oNewButton to True
         WebSet pbRender of oDetailButton to True
 
@@ -163,6 +175,5 @@ Error DFERR_PROGRAM "NavigateForward to this from-parent child Select view not y
         Case End
 
     End_Procedure
-
 
 End_Object 
